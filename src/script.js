@@ -1,7 +1,3 @@
-// `https://api.themoviedb.org/3/tv/popular?page=1&language=en-US&api_key=4f77d211170879ad8b833a60483052aa`
-
-// `https://api.themoviedb.org/3/tv/top_rated?api_key=4f77d211170879ad8b833a60483052aa&language=en-US&page=1`
-
 let app = {};
 app.Movies = function() {
   this.apikey = "https://api.themoviedb.org/3/";
@@ -68,7 +64,7 @@ app.Movies.prototype = {
               return Promise.reject({
                 statusText: "Not found items."
               });
-            } else console.log(data);
+            } else 
             data.results.map(num => {
               this.createElem("a", num);
             });
@@ -102,17 +98,36 @@ app.Movies.prototype = {
       }
 };
 
+// Init
 let start = new app.Movies();
-start.getPopularMovies();
-history.replaceState({}, 'Home', '#Home');
+const init = () => {
+  start.getPopularMovies();
+  history.replaceState({}, 'Home', '#Home');
+}
+init();
 
+// Button Alter
 const btn = document.getElementById("btn");
 
+const textInsideBtn = () => {
+  let text;
+  (location.hash === "#Home") ? text = 'top related' : text = 'popular';
+  btn.innerHTML = `Alter to ${text}`;
+}
+textInsideBtn();
+
 btn.addEventListener("click", function() {
-    start.removeElements();
+  start.removeElements();
+  if (location.hash === "#Home") { 
     start.getRelatedMovies();
-    history.replaceState({}, 'Related', '#Related')
+    history.replaceState({}, 'Related', '#Related');
+    textInsideBtn();
+  } else {
+    init();
+    textInsideBtn();
+  }
 });
+
 
 
 
